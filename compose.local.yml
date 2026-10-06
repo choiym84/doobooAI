@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: discord_assistant
+      POSTGRES_USER: assistant
+      POSTGRES_PASSWORD: assistant
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U assistant -d discord_assistant"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
