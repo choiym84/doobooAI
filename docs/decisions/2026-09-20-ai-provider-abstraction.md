@@ -14,10 +14,13 @@ AI 공급자 SDK를 Discord 처리기나 도메인 서비스에서 직접 호출
 ```text
 ScheduleInterpreter
 ├─ interpretText(input, context) -> ProposedCommand
+├─ respondToGeneralMessage(input, context) -> string
 └─ interpretTimetableImage(image, context) -> ProposedTimetable
 ```
 
 `ProposedCommand`, `ProposedTimetable`은 공급자와 무관한 JSON Schema로 검증한다. Gemini, Ollama 등은 이 계약을 구현하는 인프라 어댑터다.
+
+`UNKNOWN` intent에 대한 일반 대화 응답은 구조화 데이터가 아닌 문자열을 반환한다. 이 호출에는 현재 메시지만 전달하고, 대화 이력이나 일정 데이터는 전달하지 않는다.
 
 초기 기본값은 환경 설정의 `AI_PROVIDER=gemini`, `AI_MODEL=gemini-3.5-flash-lite`로 둔다. 키도 공급자별 환경 변수에서만 읽는다. 모델 ID를 도메인 코드나 DB 일정 레코드에 하드코딩하지 않는다. 품질이 부족한 입력에 한해 다른 Flash-Lite 모델을 fallback으로 선택할 수 있다.
 

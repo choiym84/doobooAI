@@ -4,6 +4,7 @@
  */
 export interface ScheduleInterpreter {
   interpretText(input: InterpretTextInput): Promise<ProposedCommand>;
+  respondToGeneralMessage(input: InterpretTextInput): Promise<string>;
   interpretTimetableImage(input: InterpretTimetableImageInput): Promise<ProposedTimetable>;
 }
 

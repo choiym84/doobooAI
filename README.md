@@ -10,6 +10,7 @@ Discord를 인터페이스로 사용하는 개인 학기·수업 AI 비서 MVP�
 - 설정된 Discord 전용 입력 채널의 사람 메시지 처리 연결 완료 (멘션 불필요)
 - Gemini·Ollama·OpenAI 교체를 고려한 AI 인터페이스 정의 완료
 - Gemini Flash-Lite 텍스트 해석 어댑터 연결 완료
+- 일정 기능으로 분류되지 않은 메시지에 대한 무기억 일반 대화 응답 연결 완료
 - Open-Meteo 기반 현재 날씨 조회 연결 완료
 - 시간표 이미지 AI 분석 및 저장 전 미리보기 연결 완료
 - 일정 DB 저장·확인 UI·알림 스케줄러는 미구현
@@ -51,7 +52,7 @@ flowchart LR
 | Discord API | 봇이 메시지·버튼·알림을 Discord에 전송하는 통로 |
 | Bot Runtime | 프로세스 시작, Discord 연결, 이벤트 수명 관리 |
 | 애플리케이션 계층 | AI 결과 검증, 확인 필요 여부 판단, 도메인 command 실행 |
-| AI Provider Adapter | 공급자별 SDK를 감싸고 공급자 중립 결과를 반환 |
+| AI Provider Adapter | 공급자별 SDK를 감싸고 일정 해석·시간표 분석·일반 대화 응답을 공급자 중립 계약으로 제공 |
 | PostgreSQL | 일정 상태의 유일한 사실 원천 |
 | 알림 스케줄러 | DB 일정과 예외를 기준으로 알림 작업 실행 |
 

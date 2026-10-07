@@ -196,17 +196,14 @@ export function createDiscordClient(
       return;
     }
 
-    console.info({
-      contentLength: message.content.length,
-      attachmentCount: message.attachments.size,
-    }, "Discord input channel message received");
-
     const messageText = message.content
       .replace(/<@!?\d+>/g, "")
       .trim();
 
     const attachments = [...message.attachments.values()];
     if (attachments.length > 0) {
+      console.info({ attachmentCount: attachments.length }, "Discord image input received");
+
       if (attachments.length !== 1) {
         await message.reply("시간표 이미지는 한 번에 한 장씩 보내주세요.");
         return;
@@ -260,6 +257,23 @@ export function createDiscordClient(
         receivedAt: new Date(message.createdTimestamp),
       });
 
+      if (proposal.intent === "UNKNOWN") {
+        const reply = await interpreter.respondToGeneralMessage({
+          message: messageText,
+          timezone: "Asia/Seoul",
+          receivedAt: new Date(message.createdTimestamp),
+        });
+        const replyText = reply || "응, 여기 있어. 무엇을 도와줄까?";
+
+        for (const content of splitDiscordMessage([replyText])) {
+          await message.reply({
+            content,
+            allowedMentions: { parse: [], repliedUser: false },
+          });
+        }
+        return;
+      }
+
       console.info({
         intent: proposal.intent,
         location: proposal.data.location,
@@ -305,7 +319,7 @@ export function createDiscordClient(
         ].filter(Boolean).join("\n"),
       });
     } catch (error) {
-      console.error({ error }, "Failed to interpret Discord message with AI");
+      console.error({ errorName: error instanceof Error ? error.name : "unknown" }, "Failed to interpret Discord message with AI");
       await message.reply("메시지를 해석하지 못했습니다. 잠시 후 다시 시도해 주세요.");
     }
   });
